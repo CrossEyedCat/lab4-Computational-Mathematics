@@ -6,14 +6,14 @@ import math
 import numpy as np
 from matplotlib import pyplot as plt
 
-
+#аналог range, но для float переменных
 def frange(start, stop, step):
     i = start
     while i < stop:
         yield i
         i += step
 
-
+#получение массива переменных
 def f_range_mas(start, stop, step):
     mas = []
     i = start
@@ -23,14 +23,14 @@ def f_range_mas(start, stop, step):
 
     return mas
 
-
+#получение массива значений y
 def get_y(a, b, start, end, h):
     mas = []
     for i in frange(start, end, h):
         mas.append(a * i / (i ** 4 + b))
     return mas
 
-
+#Кубическая аппроксимаксия
 def square_APPROXIMATION(x, y):
     sum_x = sum(x)
     sum_x_2 = sum(x * x)
@@ -47,7 +47,7 @@ def square_APPROXIMATION(x, y):
     for i in frange(x[0], x[x.size - 1], 0.01):
         plt_x.append(i)
         plt_y.append(res[0] + i * res[1] + i ** 2 * res[2])
-    plt.plot(plt_x, plt_y, 'g')
+    plt.plot(plt_x, plt_y,)
     S = 0
     l = 0
     for i in x:
@@ -56,7 +56,9 @@ def square_APPROXIMATION(x, y):
     print("S=" + str(S))
     σ = (S / x.size) ** 0.5
     print("σ=" + str(σ))
+    return σ
 
+#Экспоненцияальная аппроксимаксия
 def e_APPROXIMATION(x, y):
     sum_x = sum(x)
     sum_x_2 = sum(x * x)
@@ -69,7 +71,7 @@ def e_APPROXIMATION(x, y):
     for i in frange(x[0], x[x.size - 1], 0.01):
         plt_x.append(i)
         plt_y.append(math.e**(i*res[0]) + res[1])
-    plt.plot(plt_x, plt_y, 'y')
+    plt.plot(plt_x, plt_y, 's')
     S = 0
     l = 0
     for i in x:
@@ -78,7 +80,8 @@ def e_APPROXIMATION(x, y):
     print("S=" + str(S))
     σ = (S / x.size) ** 0.5
     print("σ=" + str(σ))
-
+    return σ
+#Логарифмическая аппроксимаксия
 def log_APPROXIMATION(x, y):
     sum_x = sum(np.log(x))
     sum_x_2 = sum(np.log(x) * np.log(x))
@@ -100,8 +103,9 @@ def log_APPROXIMATION(x, y):
     print("S=" + str(S))
     σ = (S / x.size) ** 0.5
     print("σ=" + str(σ))
+    return σ
 
-
+#Степенная аппроксимаксия
 def degree_APPROXIMATION(x, y):
     sum_x = sum(np.log(x))
     sum_x_2 = sum(np.log(x) * np.log(x))
@@ -114,7 +118,7 @@ def degree_APPROXIMATION(x, y):
     for i in frange(x[0], x[x.size - 1], 0.01):
         plt_x.append(i)
         plt_y.append(res[0] * math.pow(i, res[1]))
-    plt.plot(plt_x, plt_y, 'y')
+    plt.plot(plt_x, plt_y, 'b')
     S = 0
     l = 0
     for i in x:
@@ -123,7 +127,9 @@ def degree_APPROXIMATION(x, y):
     print("S=" + str(S))
     σ = (S / x.size) ** 0.5
     print("σ=" + str(σ))
+    return σ
 
+#Кубическая аппроксимаксия
 def cube_APPROXIMATION(x, y):
     sum_x = sum(x)
     sum_x_2 = sum(x * x)
@@ -152,11 +158,13 @@ def cube_APPROXIMATION(x, y):
         S=S+(res[0] + i * res[1] + i ** 2 * res[2] + i ** 3 * res[3]-y[l])**2
         l=l+1
     print("S="+str(S))
-    plt.plot(plt_x, plt_y, 'g')
+    plt.plot(plt_x, plt_y, 'y')
     σ = (S / x.size) ** 0.5
     print("σ=" + str(σ))
+    return σ
 
 
+#Линейная аппроксимаксия
 def line_APPROXIMATION(x, y):
     sum_x = sum(x)
     sum_x_2 = sum(x * x)
@@ -173,8 +181,8 @@ def line_APPROXIMATION(x, y):
     print("S=" + str(S))
     σ = (S / x.size) ** 0.5
     print("σ=" + str(σ))
+    return σ
 
-''
 if __name__ == '__main__':
     mod = input('C-консольный, F-файловый.\n')
     while mod != "C" and mod != "F":
@@ -193,10 +201,36 @@ if __name__ == '__main__':
         for i in range(x.size):
             plt.plot(x[i], y[i], 'bs')
         plt.locator_params(axis='x', nbins=25)
-    line_APPROXIMATION(x, y)
-    square_APPROXIMATION(x, y)
-    cube_APPROXIMATION(x, y)
-    e_APPROXIMATION(x, y)
-    log_APPROXIMATION(x, y)
-    degree_APPROXIMATION(x, y)
+    min_σ = 1000000000
+    σ_line = line_APPROXIMATION(x, y)
+    if σ_line<min_σ:
+        min_σ=σ_line
+    σ_square = square_APPROXIMATION(x, y)
+    if σ_square<min_σ:
+        min_σ=σ_square
+    σ_cube = cube_APPROXIMATION(x, y)
+    if σ_cube<min_σ:
+        min_σ=σ_cube
+    σ_e = e_APPROXIMATION(x, y)
+    if σ_e<min_σ:
+        min_σ=σ_e
+    σ_log = log_APPROXIMATION(x, y)
+    if σ_log<min_σ:
+        min_σ=σ_log
+    σ_degree = degree_APPROXIMATION(x, y)
+    if σ_degree<min_σ:
+        min_σ=σ_degree
+    print("Наилучшее приближение имеет ", end='')
+    if σ_line == min_σ:
+        print("линейная аппроксимаксия.")
+    elif σ_square == min_σ:
+        print("квадратная аппроксимаксия.")
+    elif σ_cube == min_σ:
+        print("кубическая аппроксимаксия.")
+    elif σ_e == min_σ:
+        print("экспоненциальная аппроксимаксия.")
+    elif σ_log == min_σ:
+        print("логарифмическая аппроксимаксия.")
+    elif σ_degree == min_σ:
+        print("степенная аппроксимаксия.")
     plt.show()
